@@ -1,0 +1,99 @@
+{
+	"info": {
+		"_postman_id": "85aadaa6-066a-44c4-bc8d-a0935cf79a9a",
+		"name": "Smit b9",
+		"description": "this is api doc for my server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29491512",
+		"_collection_link": "https://galactic-meadow-559900.postman.co/workspace/galactic-meadow-559900-Workspac~72a86585-2a34-41cb-8753-c8ea251f7c3b/collection/29491512-85aadaa6-066a-44c4-bc8d-a0935cf79a9a?action=share&source=collection_link&creator=29491512"
+	},
+	"item": [
+		{
+			"name": "v1",
+			"item": [
+				{
+					"name": "auth",
+					"item": []
+				},
+				{
+					"name": "posts",
+					"item": [
+						{
+							"name": "create post",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 123,\r\n    \"title\": \"third title\",\r\n    \"text\": \"some text of third post\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/post/122",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"post",
+										"122"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all posts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/posts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get a post with id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/post/122aa",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"post",
+										"122aa"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "this api is created for crud operation in posts"
+				}
+			]
+		},
+		{
+			"name": "v2",
+			"item": []
+		}
+	]
+}

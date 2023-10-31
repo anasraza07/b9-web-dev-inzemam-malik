@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .comment {
+            border: 1px solid black;
+            margin: 12px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .post-card {
+            margin: 10px;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 12px black;
+        }
+
+        .post-card>h3,
+        p {
+            margin: 10px 4px
+        }
+    </style>
+</head>
+
+<body onload="getAllPosts()">
+
+    <h1>My CRUD App</h1>
+
+    <form onsubmit="createPost(); return false">
+
+        <label for="postTitle">title:</label>
+        <input type="text" name="post-title" id="postTitle" placeholder="enter your post title">
+
+        <br>
+
+        <label for="postText">text:</label>
+        <input type="text" name="post-text" id="postText" placeholder="enter your text">
+
+        <br>
+        <br>
+
+        <button type="submit">Submit post</button>
+
+
+    </form>
+    <div id="result"></div>
+    <hr>
+    <br>
+
+    <div id="posts"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module">
+
+        window.createPost = function () {
+            let postTitle = document.querySelector("#postTitle").value;
+            let postText = document.querySelector("#postText").value;
+            console.log(postTitle, postText)
+            // baseUrl/api/v1/post
+            axios.post(`/api/v1/post`, {
+                title: postTitle,
+                text: postText
+            })
+                .then(function (response) {
+                    // handle success
+                    console.log(response.data);
+                    document.querySelector("#result").innerHTML = response.data;
+                    getAllPosts()
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error.data);
+                    document.querySelector("#result").innerHTML = "error in post submission"
+                })
+        }
+
+        window.getAllPosts = function () {
+            // baseUrl/api/v1/posts
+            axios.get(`/api/v1/posts`)
+                .then(function (response) {
+                    // handle success
+                    console.log(response.data);
+                    const posts = response.data;
+                    let postHtml = ``;
+                    posts.map(eachPost => {
+                        postHtml += ` 
+                        <div class="post-card" id="card-${eachPost._id}">
+                            <h3>${eachPost.title}</h3>
+                            <p>${new Date(eachPost.createdOn)}</p>
+                            <p>${eachPost.text}</p>
+                            <button onClick="delPost('${eachPost._id}')">Delete</button>
+                            <button onClick="editPost('${eachPost._id}','${eachPost.title}', '${eachPost.text}')">Edit</button>
+                        </div>
+                        `
+                    })
+                    document.querySelector("#posts").innerHTML = postHtml
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                    document.querySelector("#result").innerHTML = "error in post submission"
+                    // console.log(error.message);
+                    if (error.response.status === 401) {
+                        window.location.href = "/login.html"
+                        // console.log(true)
+                    }
+                })
+        }
+
+        window.delPost = function (postId) {
+            console.log("delete", postId)
+            // baseUrl/api/v1/posts
+            axios.delete(`/api/v1/post/${postId}`)
+                .then(function (response) {
+                    // handle success
+                    console.log(response.data);
+                    document.querySelector("#result").innerHTML = response.data
+
+                    getAllPosts()
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                    document.querySelector("#result").innerHTML = "error in post deleting"
+                })
+        }
+
+        window.editPost = (postId, title, text) => {
+            // console.log("Edit: " + postId)
+            console.log(postId, title, text)
+
+            document.querySelector(`#card-${postId}`).innerHTML = `
+            <form onsubmit="savePost('${postId}')">
+                title: <input type="text" value="${title}" id="title-${postId}"/>
+                <br/>
+                text: <input type="text" value="${text}" id="text-${postId}"/>
+                <br/>
+                <br/>
+                <button>Save</button>
+                </form>
+            `
+        }
+
+        window.savePost = (postId) => {
+            const updatedTitle = document.querySelector(`#title-${postId}`).value;
+            const updatedText = document.querySelector(`#text-${postId}`).value;
+            console.log(updatedTitle, updatedText)
+
+            axios.put(`api/v1/post/${postId}`, {
+                title: updatedTitle,
+                text: updatedText,
+            }).then(function (response) {
+                // handle success
+                console.log(response.data);
+                document.querySelector("#result").innerHTML = "post updated";
+                getAllPosts()
+            })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error.data);
+                    document.querySelector("#result").innerHTML = "error in post submission"
+                })
+        }
+        // document.querySelector("#postCommentForm").addEventListener("submit", async (e) => {
+        //     e.preventDefault();
+
+        //     let nameInput = document.querySelector("#nameInput").value;
+        //     let commentInput = document.querySelector("#commentInput").value;
+        //     // let API_KEY = 'e0f99c494c2ce394a18cc2fd3f100543'
+        //     try {
+        //         const axiosResponse = await axios.post(`/comment/${nameInput}`, {
+        //             comment: commentInput
+        //         })
+        //         // handle success
+        //         // console.log(axiosResponse.data);
+
+        //     } catch (error) {
+        //         // handle error
+        //         console.log(error.data);
+        //         // document.querySelector("#result").innerHTML = "error in getting data"
+        //     }
+        // })
+
+        // const getAllComments = async () => {
+        //     const axiosResponse = await axios.get("/comments")
+        //     console.log(axiosResponse.data)
+
+        //     axiosResponse.data.map((eachComment) => {
+        //         document.querySelector("#previousComments").innerHTML +=
+        //             `<div class="comment">
+        //             <h4 class="comment-name">${eachComment.name}</h4>
+        //             <p class="comment-text">${eachComment.comment}</p>
+        //         </div>`
+        //     })
+        // }
+
+        // setTimeout(() => {
+        //     getAllComments()
+        // }, 100)
+    </script>
+</body>
+
+</html>

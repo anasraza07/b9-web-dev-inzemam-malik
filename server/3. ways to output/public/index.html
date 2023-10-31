@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<htm lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            .comment {
+                border: 1px solid black;
+                margin: 12px;
+                padding: 12px;
+                border-radius: 8px;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <a href="/static/image.zip">Download file</a>
+        <h1>My Dummy Weather app</h1>
+
+        <form onsubmit="getWeather(); return false">
+
+            <label for="cityName">city:</label>
+            <input type="text" name="cityName" id="cityName" placeholder="enter your city name">
+
+            <br>
+
+            <button type="submit">Get Weather</button>
+
+
+        </form>
+        <div id="result"></div>
+        <hr>
+
+        <!-- <div id="commentPost">
+
+            <h2>Comment Post</h2>
+            <form id="postCommentForm">
+                <input type="text" id="nameInput" placeholder="Your Name">
+                <input type="text" id="commentInput" placeholder="Enter your comment">
+                <button>Post</button>
+            </form>
+
+            <div id="previousComments">
+
+            </div>
+        </div> -->
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module">
+
+            // let name = "alice"
+
+            window.getWeather = function () {
+
+                let cityName = document.querySelector("#cityName").value;
+                // axios.get(`/weather/${cityName}`) // url parameter
+                axios.post(`/weather`, {
+                    cityName: cityName
+                })
+                    .then(function (response) {
+                        // handle success
+                        console.log(response.data);
+                        document.querySelector("#result").innerHTML = "temprature is " + response.data.temp
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error.data);
+                        document.querySelector("#result").innerHTML = "error in getting weather data"
+                    })
+            }
+
+            // document.querySelector("#postCommentForm").addEventListener("submit", async (e) => {
+            //     e.preventDefault();
+
+            //     let nameInput = document.querySelector("#nameInput").value;
+            //     let commentInput = document.querySelector("#commentInput").value;
+            //     // let API_KEY = 'e0f99c494c2ce394a18cc2fd3f100543'
+            //     try {
+            //         const axiosResponse = await axios.post(`/comment/${nameInput}`, {
+            //             comment: commentInput
+            //         })
+            //         // handle success
+            //         // console.log(axiosResponse.data);
+
+            //     } catch (error) {
+            //         // handle error
+            //         console.log(error.data);
+            //         // document.querySelector("#result").innerHTML = "error in getting data"
+            //     }
+            // })
+
+            // const getAllComments = async () => {
+            //     const axiosResponse = await axios.get("/comments")
+            //     console.log(axiosResponse.data)
+
+            //     axiosResponse.data.map((eachComment) => {
+            //         document.querySelector("#previousComments").innerHTML +=
+            //             `<div class="comment">
+            //             <h4 class="comment-name">${eachComment.name}</h4>
+            //             <p class="comment-text">${eachComment.comment}</p>
+            //         </div>`
+            //     })
+            // }
+
+            // setTimeout(() => {
+            //     getAllComments()
+            // }, 100)
+
+        </script>
+    </body>
+
+</htm
